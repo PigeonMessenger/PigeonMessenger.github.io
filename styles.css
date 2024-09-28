@@ -46,3 +46,10 @@ body {
     font-size: 110px;
     font-weight: bolder;
 }
+.header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
