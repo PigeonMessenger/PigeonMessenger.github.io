@@ -1,34 +1,134 @@
-<DOCTYPE html>
-  <head>
-    <link rel='stylesheet' type='text/css' href='styles.css'>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>i hate you</title>
+</head>
+<body>
+    <style>
+        #chat-log {
+        position: absolute;
+        height: 400px;
+        left: 10px;
+        width: 600px;
+        max-height: 150px;
+        overflow-y: auto;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-family: monospace;
+        font-size: 14px;
+        padding: 5px;
+        border-radius: 5px;
+        z-index: 10;
+      }
+      #chat-box {
+    display: flex;
+    padding-top: 162px;
+    }
+    
+      #title {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;      
+    height: 100px; 
+    font-size: 60px;
+    font-family: monospace;
+    }
+    
+     #subtext {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;      
+        height: 80px; 
+        font-size: 20px;
+        font-family: monospace;
+        padding-right: 350px;
+     }
+    /* this is going to break */
+     #subtext-holy-shit-we-have-too-many {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;      
+        height: 10px; 
+        font-size: 20px;
+        font-family: monospace;
+        padding-right: 550px;
+     }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <title>Messenger Pigeon</title>
-    <link rel="shortcut icon" type="image/jpg" href="/img/pigeon.png"/>
-   
-  </head>
-  
-  <body>
-    <div class="toolbar">
-      <img class="logo" src="/img/pigeon.png" alt="Logo">
-      <ul class="nav-links">
-          <li><a class="nav-link" href="/">Home</a></li>
-          <li><a class="nav-link" href="/Download">Download</a></li>
-          <li><a class="nav-link" href="/Web">Web</a></li>
-          <li><a class="nav-link" href="/Mail">Mail</a></li>
-          <li><a class="nav-link" href="/About">About</a></li>
-      </ul>
-  </div>
-    
-  <center>
-    <div class="header-container">
-      <div class="centered-text">
-      <h1>Messenger Pigeon.</h1>
-      </div>
+    <!--behold, the pinnacle of divs -->
+    <div id="chat-log">
+        <p id="chat"></p>
     </div>
-      <h2>Today's future messenger.</h2>
+    <div id="chat-box">
+    <input type="text" id="message" placeholder="Type message here..."><input type="button" value="send" onclick="createMessage()"><br><br>
+    </div>
+    <div id="title">
+        <h1>i hate you</h1>
+    </div>
+    <div id="subtext">
+    <p>an incredible chatting website</p>
+    </div>
+<!--NO! NO!!! YOU'RE SUPPOSED TO OBEY ME!!!!-->
+<!--the multiple divs:-->
+    <div id="subtext-holy-shit-we-have-too-many">
+    <p>made by aiden</p>
+    </div>
     
-    </center>
-    
-    <p>currently a work in progress</p>
-    
-  </body>
+   <!-- <input type="button" value="View Messages" onclick="viewmessages()"> <br><br> -->
+
+
+
+    <script>
+    //taken from ol' reliable ruffleembed
+    let id = localStorage.getItem('id') || '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('id', id);
+    console.log("id", id);
+
+      // 10/10 security
+        const supabaseClient = window.supabase.createClient(
+            'https://ylfnsodkmjyzqwkjqzaf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZm5zb2RrbWp5enF3a2pxemFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjY5MzIsImV4cCI6MjA3MDIwMjkzMn0.s_x9Jjc5Qutd6edfxQuSzuLNQY3mBjeH_tYan7lxoJ0'
+        );
+
+async function createMessage() {
+    const user_id = localStorage.getItem('id'); 
+    const message = document.getElementById("message").value;
+    try {
+        const { error } = await supabaseClient
+            .from("ChatLogz")
+            .insert([{ user_id, message }]); 
+        if (error) {
+            console.log('Insert error:', error);
+        } else {
+            console.log('should have sent');
+        }
+    } catch (error) {
+        console.log('Unexpected error:', error);
+    }
+}
+    // Hello Ms. Block
+        async function viewmessages() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from("ChatLogz")
+                    .select("*");
+                if (error) {
+                    console.log('Select error:', error);
+                } else {
+                    let chat = "";
+                    data.forEach(row => {
+                        chat += row.user_id + ": " + row.message + "<br>";
+                    });
+                    document.getElementById("chat").innerHTML = chat;
+
+                }
+            } catch (error) {
+                console.log('Unexpected error:', error);
+            }
+        }
+        setInterval(viewmessages, 500);
+        // debug createMessage();
+    </script>
+</body>
+</html>
